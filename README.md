@@ -1,12 +1,12 @@
-# Pangu
+# vscode-addSpace
 
-Pangu is a vscode plugin to add whitespace for chinese user.
+vscode-addSpace is a vscode plugin to add whitespace for chinese user.
 
 # Install
 
-Open up VS Code and hit `F1` and type `ext` select Install Extension and type `pangu` hit enter and reload window to enable.
+Open up VS Code and hit `F1` and type `ext` select Install Extension and type `addSpace` hit enter and reload window to enable.
 
-![install and work](images/pangu.gif)
+![install and work](images/gif.gif)
 
 ## Features
 
@@ -15,14 +15,14 @@ Open up VS Code and hit `F1` and type `ext` select Install Extension and type `p
 
 ## Commands
 
-- Pangu: Add whitespace for selection
-- Pangu: Add whitespace for all
+- addSpace: Add whitespace for selection
+- addSpace: Add whitespace for all
 
 ## Settings and defaults
 ``` JS
 {
     /* Auto add whitespace on save, default false */
-    "pangu.auto_space_on_save": false
+    "addSpace.auto_space_on_save": false
 }
 ```
 
