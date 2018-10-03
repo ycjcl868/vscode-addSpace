@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import pangu = require('pangu');
+import pangu from 'pangu';
 
 export function activate(context: vscode.ExtensionContext) {
 	console.log("Congratulations, your extension'addSpace'is now active!");
