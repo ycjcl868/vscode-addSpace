@@ -15,6 +15,7 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(_onSaveDisposable);
 }
 
+// 定义一个 space 类型接口
 interface ISpace {
 	e: vscode.TextEditor;
 	d: vscode.TextDocument;
@@ -23,24 +24,29 @@ interface ISpace {
 
 class AddSpace {
 	private _disposable: vscode.Disposable;
+	private _settings: vscode.WorkspaceConfiguration;
 	constructor() {
-		const settings: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration('addSpace');
-		if (settings.get('auto_space_on_save')) {
-				let subscriptions: vscode.Disposable[] = [];
-				this._disposable = vscode.Disposable.from(...subscriptions);
-		}
+		this._settings = vscode.workspace.getConfiguration('addSpace');
+				// 当 settings.json 用户配置中有 addSpace.auto_space_on_save 为 ture
+		let subscriptions: vscode.Disposable[] = [];
+		vscode.workspace.onDidChangeConfiguration(change => {
+			// 重新获取一次
+			this._settings = vscode.workspace.getConfiguration('addSpace');
+		});
+		this._disposable = vscode.Disposable.from(...subscriptions);
 	}
 
 	private _addSpace = (space: ISpace): void => {
 		const { e, d, sel } = space;
 		e.edit(function (edit) {
-			// itterate through the selections and convert all text to Lower
+			// 依次循环转换
 			for (var x = 0; x < sel.length; x++) {
 					let txt: string = d.getText(new vscode.Range(sel[x].start, sel[x].end));
 					edit.replace(sel[x], pangu.spacing(txt));
 			}
 		});
 	}
+	// 给特定选区加空格
 	public addSpaceSelection = (): void => {
 		let e = vscode.window.activeTextEditor;
 		let d = e.document;
@@ -52,7 +58,7 @@ class AddSpace {
 		}
 		this._addSpace(space);
 	}
-
+	// 全部加空格
 	public addSpaceAll = (): void => {
 		let e = vscode.window.activeTextEditor;
 		let d = e.document;
@@ -64,9 +70,11 @@ class AddSpace {
 		}
 		this._addSpace(space);
 	}
-
+	// 保存的时候，触发
 	public onWillSaveDoc = (): void => {
-		this.addSpaceAll();
+		if (this._settings.get('auto_space_on_save')) {
+			this.addSpaceAll();
+		}
 	}
 	dispose() {
 		this._disposable.dispose();
