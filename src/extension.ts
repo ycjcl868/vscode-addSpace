@@ -2,16 +2,16 @@ import * as vscode from 'vscode';
 import pangu = require('pangu');
 
 export function activate(context: vscode.ExtensionContext) {
-	console.log("Congratulations, your extension'pangu'is now active!");
-	const pangu = new Pangu();
-	var add_space = vscode.commands.registerCommand('extension.add_space', pangu.addSpaceSelection);
-	var add_space_all = vscode.commands.registerCommand('extension.add_space_all', pangu.addSpaceAll);
+	console.log("Congratulations, your extension'addSpace'is now active!");
+	const addSpace = new AddSpace();
+	var add_space = vscode.commands.registerCommand('extension.add_space', addSpace.addSpaceSelection);
+	var add_space_all = vscode.commands.registerCommand('extension.add_space_all', addSpace.addSpaceAll);
 
-	const _onSaveDisposable = vscode.workspace.onWillSaveTextDocument(pangu.onWillSaveDoc);
+	const _onSaveDisposable = vscode.workspace.onWillSaveTextDocument(addSpace.onWillSaveDoc);
 
 	context.subscriptions.push(add_space);
 	context.subscriptions.push(add_space_all);
-	context.subscriptions.push(pangu);
+	context.subscriptions.push(addSpace);
 	context.subscriptions.push(_onSaveDisposable);
 }
 
@@ -21,16 +21,11 @@ interface ISpace {
 	sel: vscode.Selection[];
 }
 
-class Pangu {
+class AddSpace {
 	private _disposable: vscode.Disposable;
-	private _config: vscode.WorkspaceConfiguration
-
-	public getConfig() {
-		this._config = vscode.workspace.getConfiguration('pangu');
-	}
 	constructor() {
-		this.getConfig()
-		if (this._config.get('auto_space_on_save', false)) {
+		const settings: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration('addSpace');
+		if (settings.get('auto_space_on_save')) {
 				let subscriptions: vscode.Disposable[] = [];
 				this._disposable = vscode.Disposable.from(...subscriptions);
 		}
@@ -72,7 +67,6 @@ class Pangu {
 
 	public onWillSaveDoc = (): void => {
 		this.addSpaceAll();
-		// this.addSpaceSelection();
 	}
 	dispose() {
 		this._disposable.dispose();
